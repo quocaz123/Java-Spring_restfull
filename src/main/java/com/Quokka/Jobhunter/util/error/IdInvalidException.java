@@ -1,4 +1,4 @@
-package com.Quokka.Jobhunter.service.error;
+package com.Quokka.Jobhunter.util.error;
 
 public class IdInvalidException extends Exception {
     public IdInvalidException(String message) {

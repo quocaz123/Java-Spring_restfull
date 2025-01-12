@@ -2,7 +2,8 @@ package com.Quokka.Jobhunter.controller;
 
 import com.Quokka.Jobhunter.domain.User;
 import com.Quokka.Jobhunter.service.UserService;
-import com.Quokka.Jobhunter.service.error.IdInvalidException;
+import com.Quokka.Jobhunter.util.error.IdInvalidException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
