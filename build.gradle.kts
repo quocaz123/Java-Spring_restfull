@@ -4,6 +4,8 @@ plugins {
 	id("io.spring.dependency-management") version "1.1.7"
 	id("org.hibernate.orm") version "6.6.4.Final"
 	id("org.graalvm.buildtools.native") version "0.10.4"
+	id("io.freefair.lombok") version "8.6" 
+
 }
 
 group = "com.Quokka"

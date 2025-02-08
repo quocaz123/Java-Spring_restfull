@@ -15,6 +15,7 @@ public class HelloController {
     }
 
     @GetMapping("/")
+    // @CrossOrigin
     public String getHelloPage() throws IdInvalidException {
         if (true)
             throw new IdInvalidException("Check");

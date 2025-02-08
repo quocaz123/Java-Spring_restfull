@@ -1,7 +1,6 @@
 package com.Quokka.Jobhunter.domain;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.IdGeneratorType;
 
 @Entity
 @Table(name = "users")
