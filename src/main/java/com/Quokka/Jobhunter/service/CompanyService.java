@@ -5,8 +5,10 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.Quokka.Jobhunter.domain.User;
 import com.Quokka.Jobhunter.domain.dto.Company;
 import com.Quokka.Jobhunter.domain.dto.ResultPaginationDTO;
 import com.Quokka.Jobhunter.repository.CompanyRepository;
@@ -24,13 +26,13 @@ public class CompanyService {
         return this.companyRepository.save(company);
     }
 
-    public ResultPaginationDTO fetchAllCompany(Pageable pageable) {
-        Page<Company> pageCompany = this.companyRepository.findAll(pageable);
+    public ResultPaginationDTO fetchAllCompany(Specification<Company> spec, Pageable pageable) {
+        Page<Company> pageCompany = this.companyRepository.findAll(spec, pageable);
         ResultPaginationDTO rs = new ResultPaginationDTO();
         Meta mt = new Meta();
 
-        mt.setPage(pageCompany.getNumber());
-        mt.setPageSize(pageCompany.getSize());
+        mt.setPage(pageable.getPageNumber() + 1);
+        mt.setPageSize(pageable.getPageSize());
 
         mt.setPages(pageCompany.getTotalPages());
         mt.setTotal(pageCompany.getTotalElements());

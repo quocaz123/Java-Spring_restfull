@@ -1,10 +1,7 @@
 package com.Quokka.Jobhunter.controller;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,13 +10,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.Quokka.Jobhunter.domain.dto.Company;
 import com.Quokka.Jobhunter.domain.dto.ResultPaginationDTO;
 import com.Quokka.Jobhunter.service.CompanyService;
 import com.Quokka.Jobhunter.util.error.IdInvalidException;
+import com.turkraft.springfilter.boot.Filter;
 
 import jakarta.validation.Valid;
 
@@ -41,17 +37,9 @@ public class CompanyController {
     // fetch all companies
     @GetMapping("/companies")
     public ResponseEntity<ResultPaginationDTO> getListCompany(
-            // Pagination
-            @RequestParam("current") Optional<String> cuOptional,
-            @RequestParam("pageSize") Optional<String> pOptional) {
-        String sCurrent = cuOptional.isPresent() ? cuOptional.get() : " ";
-        String sPageSize = pOptional.isPresent() ? pOptional.get() : " ";
+            @Filter Specification<Company> spec, Pageable pageable) {
 
-        int current = Integer.parseInt(sCurrent);
-        int pageSize = Integer.parseInt(sPageSize);
-
-        Pageable pageable = PageRequest.of(current - 1, pageSize);
-        return ResponseEntity.status(HttpStatus.OK).body(this.companyService.fetchAllCompany(pageable));
+        return ResponseEntity.status(HttpStatus.OK).body(this.companyService.fetchAllCompany(spec, pageable));
     }
 
     @GetMapping("/companies/{id}")

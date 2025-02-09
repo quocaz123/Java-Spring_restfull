@@ -1,11 +1,18 @@
 package com.Quokka.Jobhunter.service;
 
 import com.Quokka.Jobhunter.domain.User;
+import com.Quokka.Jobhunter.domain.dto.Company;
+import com.Quokka.Jobhunter.domain.dto.Meta;
+import com.Quokka.Jobhunter.domain.dto.ResultPaginationDTO;
 import com.Quokka.Jobhunter.repository.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,8 +31,21 @@ public class UserService {
         return null;
     }
 
-    public List<User> fetchAllUser() {
-        return this.userRepository.findAll();
+    public ResultPaginationDTO fetchAllUser(Specification<User> spec, Pageable pageable) {
+        Page<User> pageUser = this.userRepository.findAll(spec, pageable);
+        ResultPaginationDTO rs = new ResultPaginationDTO();
+        Meta mt = new Meta();
+
+        mt.setPage(pageable.getPageNumber() + 1);
+        mt.setPageSize(pageable.getPageSize());
+
+        mt.setPages(pageUser.getTotalPages());
+        mt.setTotal(pageUser.getTotalElements());
+
+        rs.setMeta(mt);
+        rs.setResult(pageUser.getContent());
+
+        return rs;
     }
 
     public User handleCreateUser(User user) {

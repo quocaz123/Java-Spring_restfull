@@ -2,8 +2,6 @@ plugins {
 	java
 	id("org.springframework.boot") version "3.4.1"
 	id("io.spring.dependency-management") version "1.1.7"
-	id("org.hibernate.orm") version "6.6.4.Final"
-	id("org.graalvm.buildtools.native") version "0.10.4"
 	id("io.freefair.lombok") version "8.6" 
 
 }
@@ -30,17 +28,14 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 	implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6")
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
+	implementation("com.turkraft.springfilter:jpa:3.1.7")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	runtimeOnly("com.mysql:mysql-connector-j")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
-hibernate {
-	enhancement {
-		enableAssociationManagement = true
-	}
-}
+
 
 tasks.withType<Test> {
 	useJUnitPlatform()

@@ -1,15 +1,16 @@
 package com.Quokka.Jobhunter.controller;
 
 import com.Quokka.Jobhunter.domain.User;
+import com.Quokka.Jobhunter.domain.dto.ResultPaginationDTO;
 import com.Quokka.Jobhunter.service.UserService;
 import com.Quokka.Jobhunter.util.error.IdInvalidException;
-
+import com.turkraft.springfilter.boot.Filter;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 public class UserController {
@@ -37,22 +38,21 @@ public class UserController {
         }
         this.userService.handleDeleteUser(id);
         return ResponseEntity.ok("ericUser");
-        // return ResponseEntity.status(HttpStatus.OK).body("ericUser");
     }
 
     // fetch user by id
     @GetMapping("/users/{id}")
     public ResponseEntity<User> getUserById(@PathVariable("id") long id) {
         User fetchUser = this.userService.fetchUserById(id);
-        // return ResponseEntity.ok(fetchUser);
         return ResponseEntity.status(HttpStatus.OK).body(fetchUser);
     }
 
     // fetch all users
     @GetMapping("/users")
-    public ResponseEntity<List<User>> getAllUser() {
-        // return ResponseEntity.ok(this.userService.fetchAllUser());
-        return ResponseEntity.status(HttpStatus.OK).body(this.userService.fetchAllUser());
+    public ResponseEntity<ResultPaginationDTO> getAllUser(
+        @Filter Specification<User> spec, Pageable pageable) {
+        
+        return ResponseEntity.status(HttpStatus.OK).body(this.userService.fetchAllUser(spec, pageable));
     }
 
     @PutMapping("/users")
