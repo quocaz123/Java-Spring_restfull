@@ -3,6 +3,7 @@ package com.Quokka.Jobhunter.controller;
 import com.Quokka.Jobhunter.domain.User;
 import com.Quokka.Jobhunter.domain.dto.ResultPaginationDTO;
 import com.Quokka.Jobhunter.service.UserService;
+import com.Quokka.Jobhunter.util.annotation.ApiMessage;
 import com.Quokka.Jobhunter.util.error.IdInvalidException;
 import com.turkraft.springfilter.boot.Filter;
 import org.springframework.data.domain.Pageable;
@@ -49,6 +50,7 @@ public class UserController {
 
     // fetch all users
     @GetMapping("/users")
+    @ApiMessage("fetch all user")
     public ResponseEntity<ResultPaginationDTO> getAllUser(
         @Filter Specification<User> spec, Pageable pageable) {
         
