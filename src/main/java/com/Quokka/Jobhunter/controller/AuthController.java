@@ -1,8 +1,6 @@
 package com.Quokka.Jobhunter.controller;
 
-import java.net.http.HttpHeaders;
 
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -15,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.Quokka.Jobhunter.domain.dto.LoginDTO;
 import com.Quokka.Jobhunter.domain.dto.ResLoginDTO;
 import com.Quokka.Jobhunter.util.SecurityUtil;
-import com.Quokka.Jobhunter.util.error.IdInvalidException;
+
 
 import jakarta.validation.Valid;
 

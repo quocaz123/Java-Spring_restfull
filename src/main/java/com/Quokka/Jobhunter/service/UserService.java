@@ -1,15 +1,18 @@
 package com.Quokka.Jobhunter.service;
 
 import com.Quokka.Jobhunter.domain.User;
-import com.Quokka.Jobhunter.domain.dto.Company;
 import com.Quokka.Jobhunter.domain.dto.Meta;
+import com.Quokka.Jobhunter.domain.dto.ResCreateUserDTO;
+import com.Quokka.Jobhunter.domain.dto.ResUpdateUserDTO;
+import com.Quokka.Jobhunter.domain.dto.ResUserDTO;
 import com.Quokka.Jobhunter.domain.dto.ResultPaginationDTO;
 import com.Quokka.Jobhunter.repository.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -45,6 +48,20 @@ public class UserService {
         rs.setMeta(mt);
         rs.setResult(pageUser.getContent());
 
+        // remove sensitive data
+        List<ResUserDTO> listUser = pageUser.getContent()
+        .stream().map(item -> new ResUserDTO(
+            item.getId(),
+            item.getEmail(),
+            item.getName(),
+            item.getGender(),
+            item.getAddress(),
+            item.getAge(),
+            item.getUpdateAt(),
+            item.getCreateAt()
+        )).collect(Collectors.toList());
+
+        rs.setResult(listUser);
         return rs;
     }
 
@@ -60,8 +77,9 @@ public class UserService {
         User currentUser = this.fetchUserById(reqUser.getId());
         if (currentUser != null) {
             currentUser.setName(reqUser.getName());
-            currentUser.setEmail(reqUser.getEmail());
-            currentUser.setPassword(reqUser.getPassword());
+            currentUser.setAddress(reqUser.getAddress());
+            currentUser.setAge(reqUser.getAge());
+            currentUser.setGender(reqUser.getGender());
             // update
             currentUser = this.userRepository.save(currentUser);
         }
@@ -70,5 +88,45 @@ public class UserService {
 
     public User handleGetUserByUsername(String username) {
         return this.userRepository.findByEmail(username);
+    }
+
+    public boolean isEmailExits(String email){
+        return this.userRepository.existsByEmail(email);
+    }
+
+    public ResCreateUserDTO convertToResCreateUserDTO(User user){
+        ResCreateUserDTO res = new ResCreateUserDTO();
+        res.setId(user.getId());
+        res.setEmail(user.getEmail());
+        res.setName(user.getName());
+        res.setAge(user.getAge());
+        res.setCreateAt(user.getCreateAt());
+        res.setGender(user.getGender());
+        res.setAddress(user.getAddress());
+        return res;
+    }
+
+    public ResUserDTO convertToResUserDTO(User user){
+        ResUserDTO res = new ResUserDTO();
+        res.setId(user.getId());
+        res.setEmail(user.getEmail());
+        res.setName(user.getName());
+        res.setAge(user.getAge());
+        res.setUpdateAt(user.getUpdateAt());
+        res.setCreateAt(user.getCreateAt());
+        res.setGender(user.getGender());
+        res.setAddress(user.getAddress());
+        return res;
+    }
+
+    public ResUpdateUserDTO convertToResUpdateUserDTO(User user){
+        ResUpdateUserDTO res = new ResUpdateUserDTO();
+        res.setId(user.getId());
+        res.setName(user.getName());
+        res.setAge(user.getAge());
+        res.setUpdateAt(user.getUpdateAt());
+        res.setGender(user.getGender());
+        res.setAddress(user.getAddress());
+        return res;
     }
 }

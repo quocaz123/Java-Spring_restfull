@@ -1,14 +1,12 @@
 package com.Quokka.Jobhunter.service;
 
-import java.util.List;
+
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
-import com.Quokka.Jobhunter.domain.User;
 import com.Quokka.Jobhunter.domain.dto.Company;
 import com.Quokka.Jobhunter.domain.dto.ResultPaginationDTO;
 import com.Quokka.Jobhunter.repository.CompanyRepository;

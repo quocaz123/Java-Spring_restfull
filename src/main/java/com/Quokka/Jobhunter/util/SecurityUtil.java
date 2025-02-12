@@ -17,8 +17,6 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 
-import com.Quokka.Jobhunter.domain.dto.ResLoginDTO;
-
 @Service
 public class SecurityUtil {
     public static final MacAlgorithm JWT_ALGORITHM = MacAlgorithm.HS256;
