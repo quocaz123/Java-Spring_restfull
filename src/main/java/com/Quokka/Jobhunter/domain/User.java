@@ -2,7 +2,7 @@ package com.Quokka.Jobhunter.domain;
 
 import java.time.Instant;
 
-import com.Quokka.Jobhunter.util.SecurityUtil;
+import com.Quokka.Jobhunter.util.security.SecurityUtil;
 import com.Quokka.Jobhunter.util.constant.GenderEnum;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
@@ -33,6 +33,7 @@ public class User {
     private GenderEnum gender;
 
     private String address;
+    @Column(columnDefinition = "MEDIUMTEXT")
     private String refreshToken;
     private Instant createAt;
     private Instant updateAt;

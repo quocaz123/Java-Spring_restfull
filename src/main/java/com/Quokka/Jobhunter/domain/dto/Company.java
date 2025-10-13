@@ -2,7 +2,7 @@ package com.Quokka.Jobhunter.domain.dto;
 
 import java.time.Instant;
 
-import com.Quokka.Jobhunter.util.SecurityUtil;
+
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

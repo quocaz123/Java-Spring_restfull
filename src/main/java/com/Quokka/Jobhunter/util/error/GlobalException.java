@@ -1,8 +1,7 @@
 package com.Quokka.Jobhunter.util.error;
 
-import com.Quokka.Jobhunter.domain.RestResponse;
-import java.util.List;
-import java.util.stream.Collectors;
+
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -10,27 +9,60 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingRequestCookieException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
+import com.Quokka.Jobhunter.domain.res.RestResponse;
+
+import java.text.ParseException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalException {
     @ExceptionHandler(value = {
             UsernameNotFoundException.class,
             BadCredentialsException.class,
-            IdInvalidException.class
+            ParseException.class,
+            MissingRequestCookieException.class
     })
-    public ResponseEntity<RestResponse<Object>> handleIdException(Exception ex) {
+    public ResponseEntity<Object> handleSecurityException(Exception ex){
         RestResponse<Object> res = new RestResponse<Object>();
         res.setStatusCode(HttpStatus.BAD_REQUEST.value());
-        res.setError(ex.getMessage());
-        res.setMessage("Exception occurs...");
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
+        res.setError("Exception occurs...");
+        res.setMessage(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST.value()).body(res);
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<RestResponse<Object>> validationError(MethodArgumentNotValidException ex) {
+    @ExceptionHandler(value = {
+           NoResourceFoundException.class
+    })
+    public ResponseEntity<Object> handleNotFoundException(Exception ex){
+        RestResponse<Object> res = new RestResponse<Object>();
+        res.setStatusCode(HttpStatus.NOT_FOUND.value());
+        res.setError("404 Not Found. URL may not exist...");
+        res.setMessage(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND.value()).body(res);
+    }
+
+    @ExceptionHandler(value = {
+            IdInvalidException.class,
+            DataIntegrityViolationException.class,
+            IllegalStateException.class
+    })
+    public ResponseEntity<Object> handleIdException(Exception ex){
+        RestResponse<Object> res = new RestResponse<Object>();
+        res.setStatusCode(HttpStatus.BAD_REQUEST.value());
+        res.setError("Exception occurs...");
+        res.setMessage(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST.value()).body(res);
+    }
+
+    @ExceptionHandler(value = MethodArgumentNotValidException.class)
+    public ResponseEntity<Object> validationError(
+            MethodArgumentNotValidException ex
+    ){
         BindingResult result = ex.getBindingResult();
         final List<FieldError> fieldErrors = result.getFieldErrors();
 
@@ -45,13 +77,34 @@ public class GlobalException {
     }
 
     @ExceptionHandler(value = {
-        NoResourceFoundException.class
+        StorageException.class
     })
-    public ResponseEntity<RestResponse<Object>> handleNotFoundException(Exception ex){
-        RestResponse<Object> res = new RestResponse<>();
-        res.setStatusCode(HttpStatus.NOT_FOUND.value());
-        res.setError(ex.getMessage());
-        res.setMessage("404 Not Found. URL may not exist...");
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
+    public ResponseEntity<Object> handleFileUploadException(Exception ex){
+        RestResponse<Object> res = new RestResponse<Object>();
+        res.setStatusCode(HttpStatus.BAD_REQUEST.value());
+        res.setError("Exception upload file");
+        res.setMessage(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST.value()).body(res);
     }
+
+    @ExceptionHandler(value = {
+            PermissionException.class,
+    })
+    public ResponseEntity<Object> handlePermissionException(Exception ex){
+        RestResponse<Object> res = new RestResponse<Object>();
+        res.setStatusCode(HttpStatus.FORBIDDEN.value());
+        res.setError("FORBIDDEN");
+        res.setMessage(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN.value()).body(res);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<RestResponse<Object>> handleAllException(Exception ex) {
+        RestResponse<Object> res = new RestResponse<Object>();
+        res.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        res.setMessage(ex.getMessage());
+        res.setError("Internal Server Error");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(res);
+    }
+
 }
